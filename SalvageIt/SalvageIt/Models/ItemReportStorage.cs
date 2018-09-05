@@ -10,8 +10,8 @@ namespace SalvageIt.Models
 
     public abstract class ItemReportStorage
     {
-        public ReadOnlyCollection<ItemReport> ItemReports => 
-            new ReadOnlyCollection<ItemReport>(ObservableItemReports);
+        public ReadOnlyObservableCollection<ItemReport> ItemReports => 
+            new ReadOnlyObservableCollection<ItemReport>(ObservableItemReports);
         //new List<IItemReport>(ObservableItemReports).AsReadOnly();
 
         private ObservableCollection<ItemReport> _ObservableItemReports = null;
@@ -34,11 +34,29 @@ namespace SalvageIt.Models
 
         public event NotifyCollectionChangedEventHandler ItemReportsChanged;
 
-        public abstract void SubmitItem(ItemReport item_report);
+        public abstract int SubmitItem(ItemReport item_report);
 
         private void Value_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {
             ItemReportsChanged?.Invoke(this, e);
+        }
+
+        /// <summary>
+        /// Throws exceptions if the ItemReport is invalid
+        /// </summary>
+        /// <param name="item_report"></param>
+        /// <returns></returns>
+        protected void AssertItemReportValid(ItemReport item_report)
+        {
+            if(item_report.ItemPhoto == null)
+            {
+                throw new Exception("Item reports require a photo");
+            }
+
+            if(item_report.ItemLocation == null)
+            {
+                throw new Exception("Item reports require a location");
+            }
         }
     }
 }

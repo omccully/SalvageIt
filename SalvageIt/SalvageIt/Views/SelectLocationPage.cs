@@ -15,6 +15,9 @@ namespace SalvageIt.Views
 
     public class SelectLocationPage : ContentPage, IDisposable
 	{
+        // TODO: require that user is zoomed close enough 
+        // to select a precise location
+
         public event EventHandler<LocationCoordinatesEventArgs> LocationChosen;
         protected void OnLocationChosen(LocationCoordinates location_coords)
         {
@@ -22,8 +25,11 @@ namespace SalvageIt.Views
                 new LocationCoordinatesEventArgs(location_coords));
         }
 
-		public SelectLocationPage (LocationCoordinates initial_position = null)
+        IToaster Toaster;
+
+		public SelectLocationPage(LocationCoordinates initial_position = null)
 		{
+            Toaster = DependencyService.Get<IToaster>();
             if (initial_position == null)
             {
                 InitializeMap();
@@ -44,14 +50,11 @@ namespace SalvageIt.Views
         }
 
         Map TheMap;
-        Thread PinUpdateThread;
+        Timer PinUpdateTimer;
+        TimeSpan PinRefreshPeriod = TimeSpan.FromMilliseconds(100);
 
         void InitializeMap(LocationCoordinates initial_position)
         {
-            // TODO: when the user moves the map,
-            // put a market in the middle. the user moves/zooms 
-            // to select location, then clicks a button.
-
             Position map_position = new Position(initial_position.Latitude,
                 initial_position.Longitude);
 
@@ -64,26 +67,73 @@ namespace SalvageIt.Views
                 WidthRequest = 960,
                 VerticalOptions = LayoutOptions.FillAndExpand
             };
-            
-            var stack = new StackLayout { Spacing = 0 };
-            stack.Children.Add(TheMap);
-            Content = stack;
 
-            PinUpdateThread = new Thread(PinUpdater);
-            PinUpdateThread.Start();
-        }
+            //var stack = new StackLayout { Spacing = 0 };
+            //stack.Children.Add(TheMap);
+            //Content = stack;
 
-        void PinUpdater()
-        {
-            while(TheMap != null)
+            AbsoluteLayout absolute = new AbsoluteLayout();
+
+            AbsoluteLayout.SetLayoutBounds(TheMap, new Rectangle(0, 0, 1, 1));
+            AbsoluteLayout.SetLayoutFlags(TheMap, AbsoluteLayoutFlags.All);
+            absolute.Children.Add(TheMap);
+
+            // ~~ Help label
+            Label help_label = new Label()
             {
-                UpdatePin();
-                Thread.Sleep(30);
-            }
+                Text = "Center your map on the item's location",
+                BackgroundColor = Color.White
+            };
+
+            AbsoluteLayout.SetLayoutBounds(help_label, new Rectangle(.5, .04, .5, .1));
+            AbsoluteLayout.SetLayoutFlags(help_label, AbsoluteLayoutFlags.All);
+            absolute.Children.Add(help_label);
+
+            // ~~ Finished button
+            Button finished_button = new Button()
+            {
+                Text = "Done"
+            };
+            AbsoluteLayout.SetLayoutBounds(finished_button, new Rectangle(.5, 1, .5, .1));
+            AbsoluteLayout.SetLayoutFlags(finished_button, AbsoluteLayoutFlags.All);
+            finished_button.Clicked += Finished_button_Clicked;
+            absolute.Children.Add(finished_button);
+
+            Content = absolute;
+
+            PinUpdateTimer = new Timer(UpdatePin, null,
+                TimeSpan.Zero, PinRefreshPeriod);
         }
 
-        void UpdatePin()
+        private void Finished_button_Clicked(object sender, EventArgs e)
         {
+            MapSpan region = TheMap.VisibleRegion;
+            if (region == null)
+            {
+                Toaster.DisplayError("Map not loaded");
+                return;
+            }
+
+            if(region.Radius.Meters > Distance.FromMiles(1.0).Meters)
+            {
+                Toaster.DisplayError("Please zoom in more to get a more " +
+                    "precise location");
+                return;
+            }
+
+            Position pos = region.Center;
+
+            Navigation.PopAsync();
+            OnLocationChosen(new LocationCoordinates(pos.Latitude, pos.Longitude));
+        }
+
+        void UpdatePin(object state)
+        {
+            if(TheMap == null)
+            {
+                PinUpdateTimer.Dispose();
+            }
+
             MapSpan region = TheMap.VisibleRegion;
 
             if (region == null) return;
@@ -94,7 +144,7 @@ namespace SalvageIt.Views
         Position LastPinPosition = new Position();
         void UpdatePinToPosition(Position pos)
         {
-            if (pos == LastPinPosition) return;
+            if (pos == LastPinPosition && TheMap.Pins.Count > 0) return;
 
             Pin pin = new Pin
             {
@@ -113,7 +163,8 @@ namespace SalvageIt.Views
         public void Dispose()
         {
             TheMap = null;
-            PinUpdateThread.Abort();
+            PinUpdateTimer.Dispose();
+            //PinUpdateThread.Abort();
         }
     }
 }

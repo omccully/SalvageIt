@@ -8,6 +8,7 @@ using Xamarin.Forms;
 namespace SalvageIt.Views
 {
     using ViewModels;
+    using Models;
 
     public partial class MainPage : ContentPage
     {
@@ -15,7 +16,8 @@ namespace SalvageIt.Views
         {
             InitializeComponent();
 
-            BindingContext = new MainPageViewModel(Navigation);
+            BindingContext = new MainPageViewModel(Navigation,
+                DependencyService.Get<ItemReportStorage>());
         }
     }
 }

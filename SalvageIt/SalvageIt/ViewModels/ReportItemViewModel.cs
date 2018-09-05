@@ -28,6 +28,12 @@ namespace SalvageIt.ViewModels
             this.ItemReportStorage = item_report_storage;
         }
 
+        public event EventHandler<ItemReportEventArgs> ReportItemSubmitted;
+        protected void OnReportItemSubmitted(ItemReport item_report)
+        {
+            ReportItemSubmitted?.Invoke(this, new ItemReportEventArgs(item_report));
+        }
+
         #region Item geolocator
         ICommand _SelectLocationCommand;
         public ICommand SelectLocationCommand
@@ -54,6 +60,19 @@ namespace SalvageIt.ViewModels
             SelectedLocation = e.LocationCoordinates;
         }
 
+        string _SelectedLocationText;
+        public string SelectedLocationText
+        {
+            get
+            {
+                return _SelectedLocationText;
+            }
+            private set
+            {
+                SetProperty(ref _SelectedLocationText, value);
+            }
+        }
+
         LocationCoordinates _SelectedLocation;
         public LocationCoordinates SelectedLocation
         {
@@ -64,6 +83,7 @@ namespace SalvageIt.ViewModels
             set
             {
                 SetProperty(ref _SelectedLocation, value);
+                SelectedLocationText = value.ToString();
             }
         }
         #endregion
@@ -79,7 +99,7 @@ namespace SalvageIt.ViewModels
             }
         }
 
-        public string PhotoStatusText { get; set; } = "No picture taken yet";
+        public string PhotoStatusText { get; private set; } = "No picture taken yet";
 
         ImageSource _PhotoTaken;
         public ImageSource PhotoTaken
@@ -158,7 +178,12 @@ namespace SalvageIt.ViewModels
 
             System.Diagnostics.Debug.WriteLine(ir);
 
-            if (SelectedLocation == null)
+            if(String.IsNullOrWhiteSpace(TitleInputText))
+            {
+                Toaster.DisplayError("You must enter a title");
+                return;
+            }
+            else if (SelectedLocation == null)
             {
                 Toaster.DisplayError("You must select a location first");
                 return;
@@ -169,7 +194,16 @@ namespace SalvageIt.ViewModels
                 return;
             }
 
-            ItemReportStorage.SubmitItem(ir);
+            try
+            {
+                ItemReportStorage.SubmitItem(ir);
+                Navigation.PopAsync();
+                OnReportItemSubmitted(ir);
+            }
+            catch(Exception e)
+            {
+                Toaster.DisplayError(e.Message);
+            }
         }
     }
 }

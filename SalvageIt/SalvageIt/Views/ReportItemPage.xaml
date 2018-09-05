@@ -15,9 +15,8 @@
             <Label Text="{Binding PhotoStatusText}" />
 
             <Button Text="Select Location" Command="{Binding SelectLocationCommand}" />
-            <Label Text="{Binding SelectedLocation}" />
+            <Label Text="{Binding SelectedLocationText}" />
 
-            
             <Button Text="Submit" Command="{Binding SubmitButtonCommand}" />
         </StackLayout>
     </ContentPage.Content>

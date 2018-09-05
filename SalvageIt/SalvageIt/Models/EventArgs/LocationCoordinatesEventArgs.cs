@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace SalvageIt.Services
+namespace SalvageIt.Models
 {
-    using Models;
-
     public class LocationCoordinatesEventArgs
     {
         public LocationCoordinates LocationCoordinates { get; set; }
