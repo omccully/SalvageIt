@@ -4,10 +4,21 @@
              x:Class="SalvageIt.Views.ReportItemPage">
     <ContentPage.Content>
         <StackLayout>
-            <Image x:Name="PhotoImage" />
-            <Button x:Name="CameraButton" Text="Take Photo" Clicked="CameraButton_Clicked" />
+            <Label Text="Title" />
+            <Entry Text="{Binding TitleInputText, Mode=TwoWay}" />
 
-            <Button x:Name="SelectLocationButton" Text="Select Location" Clicked="SelectLocationButton_Clicked" />
+            <Label Text="Description" />
+            <Entry Text="{Binding DescriptionInputText, Mode=TwoWay}" />
+            
+            <!--<Image x:Name="PhotoImage" />-->
+            <Button Text="Take Photo" Command="{Binding CameraButtonCommand}" />
+            <Label Text="{Binding PhotoStatusText}" />
+
+            <Button Text="Select Location" Command="{Binding SelectLocationCommand}" />
+            <Label Text="{Binding SelectedLocation}" />
+
+            
+            <Button Text="Submit" Command="{Binding SubmitButtonCommand}" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

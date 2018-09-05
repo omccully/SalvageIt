@@ -7,24 +7,15 @@ using Xamarin.Forms;
 
 namespace SalvageIt.Views
 {
+    using ViewModels;
+
     public partial class MainPage : ContentPage
     {
         public MainPage()
         {
             InitializeComponent();
-        }
 
-        async void OnReportItem(object sender, EventArgs e)
-        {
-            try
-            {
-                await Navigation.PushAsync(new ReportItemPage());
-            }
-            catch(Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
-                throw ex;
-            }
+            BindingContext = new MainPageViewModel(Navigation);
         }
     }
 }

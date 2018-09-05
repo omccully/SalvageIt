@@ -6,6 +6,7 @@ using Xamarin.Forms.Xaml;
 namespace SalvageIt
 {
     using Views;
+    using Services;
 
     public partial class App : Application
     {

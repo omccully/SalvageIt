@@ -3,19 +3,19 @@ using System.Collections.Generic;
 using System.Text;
 using System.Collections.ObjectModel;
 
-namespace SalvageIt.Services
+namespace SalvageIt.Models
 {
     using Models;
     using System.Collections.Specialized;
 
-    abstract class ItemReportStorage
+    public abstract class ItemReportStorage
     {
-        public ReadOnlyCollection<IItemReport> ItemReports => 
-            new ReadOnlyCollection<IItemReport>(ObservableItemReports);
+        public ReadOnlyCollection<ItemReport> ItemReports => 
+            new ReadOnlyCollection<ItemReport>(ObservableItemReports);
         //new List<IItemReport>(ObservableItemReports).AsReadOnly();
 
-        private ObservableCollection<IItemReport> _ObservableItemReports = null;
-        protected ObservableCollection<IItemReport> ObservableItemReports
+        private ObservableCollection<ItemReport> _ObservableItemReports = null;
+        protected ObservableCollection<ItemReport> ObservableItemReports
         {
             get
             {
@@ -34,7 +34,7 @@ namespace SalvageIt.Services
 
         public event NotifyCollectionChangedEventHandler ItemReportsChanged;
 
-        public abstract void SubmitItem(IItemReport item_report);
+        public abstract void SubmitItem(ItemReport item_report);
 
         private void Value_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
         {

@@ -6,11 +6,32 @@ using Xamarin.Forms;
 
 namespace SalvageIt.Models
 {
-    class ItemReport : IItemReport
+    public class ItemReport
     {
         public int ID { get; set; }
-        public Position ItemLocation { get; set; }
-        public ImageSource ItemImage { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public LocationCoordinates ItemLocation { get; set; }
+        public ImageSource ItemPhoto { get; set; }
         public DateTime ReportTime { get; set; }
+
+        public override string ToString()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine($"Item #{ID}");
+            if(!String.IsNullOrWhiteSpace(Title))
+            {
+                sb.AppendLine(Title);
+            }
+            if (!String.IsNullOrWhiteSpace(Description))
+            {
+                sb.AppendLine(Description);
+            }
+
+            sb.AppendLine($"Location: {ItemLocation}")
+                .AppendLine($"Time: {ReportTime}");
+
+            return sb.ToString();
+        }
     }
 }

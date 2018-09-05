@@ -10,7 +10,8 @@
            HorizontalOptions="Center"
            VerticalOptions="CenterAndExpand" />
         <ListView/>
-        <Button x:Name="ReportItemButton" Text="Report a roadside item" Clicked="OnReportItem" />
+        <Button Text="Report a roadside item" 
+                Command="{Binding ReportItemCommand}" />
     </StackLayout>
 
 </ContentPage>
