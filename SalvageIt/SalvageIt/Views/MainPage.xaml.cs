@@ -17,7 +17,7 @@ namespace SalvageIt.Views
         {
             InitializeComponent();
 
-            BindingContext = new MainPageViewModel(Navigation,
+            BindingContext = new MainViewModel(Navigation,
                 DependencyService.Get<ItemReportStorage>(),
                 DependencyService.Get<IGeolocator>());
 

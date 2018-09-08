@@ -47,8 +47,9 @@ namespace SalvageIt.ViewModels
                 return;
             }
 
-            object vm = _container.Resolve(vm_type);
-            view.BindingContext = vm;
+            return;
+            //object vm = _container.Resolve(vm_type);
+            //view.BindingContext = vm;
         }
     }
 }

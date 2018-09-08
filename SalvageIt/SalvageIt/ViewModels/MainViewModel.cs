@@ -12,13 +12,13 @@ namespace SalvageIt.ViewModels
     using Models;
     using Services;
 
-    public class MainPageViewModel : BaseViewModel
+    public class MainViewModel : BaseViewModel
     {
         INavigation Navigation;
         ItemReportStorage ItemReportStorage;
         IGeolocator Geolocator;
 
-        public MainPageViewModel(INavigation navigation, 
+        public MainViewModel(INavigation navigation, 
             ItemReportStorage item_report_storage, IGeolocator geolocator)
         {
             this.Navigation = navigation;
