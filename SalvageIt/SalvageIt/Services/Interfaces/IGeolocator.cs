@@ -10,5 +10,7 @@ namespace SalvageIt.Services
     public interface IGeolocator
     {
         Task<LocationCoordinates> GetPositionAsync();
+
+        LocationCoordinates LastKnownLocation { get; }
     }
 }

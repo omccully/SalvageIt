@@ -25,17 +25,50 @@ namespace SalvageIt.Services
             this.Timeout = timeout ?? DefaultTimeout;
             this.CancelToken = cancel_token;
             this.IncludeHeading = include_heading;
+            InitializeLastKnownLocation();
         }
 
         public Geolocator() : this(DefaultTimeout)
         {
         }
 
+        object last_known_location_lock = new object();
+        volatile LocationCoordinates _LastKnownLocation = null;
+        public LocationCoordinates LastKnownLocation {
+            get
+            {
+                lock (last_known_location_lock)
+                {
+                    return _LastKnownLocation;
+                }
+            }
+            private set
+            {
+                lock (last_known_location_lock)
+                {
+                    _LastKnownLocation = value;
+                }
+            }
+        }
+
         public async Task<LocationCoordinates> GetPositionAsync()
         {
             var current_pos = await CrossGeolocator.Current.GetPositionAsync(Timeout, CancelToken, IncludeHeading);
 
-            return new LocationCoordinates(current_pos.Latitude, current_pos.Longitude);
+            var pos = new LocationCoordinates(current_pos.Latitude, current_pos.Longitude);
+            LastKnownLocation = pos;
+
+            // we return pos the variable instead of LastKnownLocation, 
+            // since LastKnownLocation could possibly be changed 
+            // since the last set
+            return pos;
+        }
+
+        async void InitializeLastKnownLocation()
+        {
+            var last_pos = await CrossGeolocator.Current.GetLastKnownLocationAsync();
+
+            LastKnownLocation = new LocationCoordinates(last_pos.Latitude, last_pos.Longitude);
         }
     }
 }

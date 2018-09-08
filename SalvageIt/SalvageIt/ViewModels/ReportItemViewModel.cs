@@ -165,7 +165,7 @@ namespace SalvageIt.ViewModels
             }
         }
 
-        void SubmitButtonAction()
+        async void SubmitButtonAction()
         {
             ItemReport ir = new ItemReport()
             {
@@ -178,26 +178,10 @@ namespace SalvageIt.ViewModels
 
             System.Diagnostics.Debug.WriteLine(ir);
 
-            if(String.IsNullOrWhiteSpace(TitleInputText))
-            {
-                Toaster.DisplayError("You must enter a title");
-                return;
-            }
-            else if (SelectedLocation == null)
-            {
-                Toaster.DisplayError("You must select a location first");
-                return;
-            }
-            else if(PhotoTaken == null)
-            {
-                Toaster.DisplayError("You must take a photo of the item first");
-                return;
-            }
-
             try
             {
-                ItemReportStorage.SubmitItem(ir);
-                Navigation.PopAsync();
+                int ID = await ItemReportStorage.SubmitItem(ir);
+                await Navigation.PopAsync();
                 OnReportItemSubmitted(ir);
             }
             catch(Exception e)

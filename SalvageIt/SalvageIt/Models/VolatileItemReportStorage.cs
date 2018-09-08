@@ -10,23 +10,40 @@ using System.Linq;
 namespace SalvageIt.Models
 {
     using Models;
+    using SalvageIt.Models.Validators;
+    using System.Threading.Tasks;
 
     public class VolatileItemReportStorage : ItemReportStorage
     {
-        public VolatileItemReportStorage()
+        public VolatileItemReportStorage() :
+            base(new SubmitItemReportValidator())
         {
-            ObservableItemReports = new ObservableCollection<ItemReport>();
+
         }
 
-        public override int SubmitItem(ItemReport item_report)
+        public VolatileItemReportStorage(IValidator<ItemReport> item_report_validator)
+            : base(item_report_validator)
+        {
+
+        }
+
+        public override async Task Refresh(LocationCoordinates location, double radius_miles)
+        {
+            await Task.Delay(500);
+        }
+
+        public override async Task<int> SubmitItem(ItemReport item_report)
         {
             AssertItemReportValid(item_report);
 
             if (item_report.ID == 0) // no ID, create new
             {
-                int id = ObservableItemReports.Max(ir => ir.ID) + 1;
+                int max_or_zero = EditableLocalItemReports.Count() > 0 ?
+                    EditableLocalItemReports.Max(ir => ir.ID) : 0;
+
+                int id = max_or_zero + 1;
                 item_report.ID = id;
-                ObservableItemReports.Add(item_report);
+                EditableLocalItemReports.Add(item_report);
                 return id;
             }
             else
@@ -35,12 +52,12 @@ namespace SalvageIt.Models
                 // check the user credentials to make sure they're allowed
                 // to edit that ItemReport.
                 int i = 0;
-                foreach(ItemReport ir in ObservableItemReports)
+                foreach(ItemReport ir in EditableLocalItemReports)
                 {
                     if(ir.ID == item_report.ID)
                     {
-                        ObservableItemReports.RemoveAt(i);
-                        ObservableItemReports.Add(item_report);
+                        EditableLocalItemReports.RemoveAt(i);
+                        EditableLocalItemReports.Add(item_report);
                         return item_report.ID;
                     }
                     i++;

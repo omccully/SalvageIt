@@ -6,6 +6,8 @@ using Xamarin.Forms;
 
 namespace SalvageIt.Models
 {
+    using Services;
+
     public class ItemReport
     {
         public int ID { get; set; }
@@ -19,7 +21,7 @@ namespace SalvageIt.Models
         {
             StringBuilder sb = new StringBuilder();
             sb.AppendLine($"Item #{ID}");
-            if(!String.IsNullOrWhiteSpace(Title))
+            if (!String.IsNullOrWhiteSpace(Title))
             {
                 sb.AppendLine(Title);
             }
@@ -32,6 +34,22 @@ namespace SalvageIt.Models
                 .AppendLine($"Time: {ReportTime}");
 
             return sb.ToString();
+        }
+
+        public TimeSpan TimeSincePosted
+        {
+            get
+            {
+                return DateTime.Now - ReportTime;
+            }
+        }
+
+        public string TimeSincePostedString
+        {
+            get
+            {
+                return TimeSincePosted.ToUserFriendlyString();
+            }
         }
     }
 }

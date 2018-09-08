@@ -9,6 +9,7 @@ namespace SalvageIt.Views
 {
     using ViewModels;
     using Models;
+    using Services;
 
     public partial class MainPage : ContentPage
     {
@@ -17,7 +18,11 @@ namespace SalvageIt.Views
             InitializeComponent();
 
             BindingContext = new MainPageViewModel(Navigation,
-                DependencyService.Get<ItemReportStorage>());
+                DependencyService.Get<ItemReportStorage>(),
+                DependencyService.Get<IGeolocator>());
+
+            ReportItemsListView.ItemsSource = 
+                DependencyService.Get<ItemReportStorage>().LocalItemReports;
         }
     }
 }

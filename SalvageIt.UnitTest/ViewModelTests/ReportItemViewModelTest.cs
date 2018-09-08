@@ -56,8 +56,16 @@ namespace SalvageIt.UnitTest.ViewModelTests
         }
 
         [TestMethod]
-        public async Task EnterAllDataAndSubmit()
+        public void EnterAllDataAndSubmit()
         {
+            // EnterAllDataAndSubmitAsync().GetAwaiter().GetResult();
+            EnterAllDataAndSubmitAsync();
+        }
+
+        void EnterAllDataAndSubmitAsync()
+        {
+
+
             string title_input = "A couch I found";
             string description_input = "Looks alright";
 
@@ -69,14 +77,15 @@ namespace SalvageIt.UnitTest.ViewModelTests
 
             // IPictureTaker should return an ImageSource
             // to set PhotoTaken asynchronously
-            vm.CameraButtonCommand.Execute(null);
+            //vm.CameraButtonCommand.Execute(null);
+            vm.PhotoTaken = ImageSourceExample;
 
             vm.SelectedLocation = MicrosoftHQ;
 
             // give time for async picture
             //System.Threading.Thread.Sleep(100);
             System.Diagnostics.Debug.WriteLine("BeforeTakePic");
-            await pic_taker.TakePicture();
+            //await pic_taker.TakePicture();
             System.Diagnostics.Debug.WriteLine("AfterTakePic");
 
             ItemReport item_report_from_event = null;
@@ -91,8 +100,8 @@ namespace SalvageIt.UnitTest.ViewModelTests
 
             // make sure the ItemReport that was put in storage
             // matches the input
-            Assert.IsTrue(item_report_storage.ItemReports.Count == 1);
-            ItemReport ir = item_report_storage.ItemReports[0];
+            Assert.IsTrue(item_report_storage.LocalItemReports.Count == 1);
+            ItemReport ir = item_report_storage.LocalItemReports[0];
             Assert.IsTrue(ir.Title == title_input);
             Assert.IsTrue(ir.Description == description_input);
             Assert.IsTrue(ir.ItemLocation == MicrosoftHQ);

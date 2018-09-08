@@ -2,43 +2,36 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
+using System.Threading.Tasks;
+using System.Linq;
 
 namespace SalvageIt.Models
 {
     using Models;
-    using System.Collections.Specialized;
+    using Models.Validators;
+    using Services;
 
     public abstract class ItemReportStorage
     {
-        public ReadOnlyObservableCollection<ItemReport> ItemReports => 
-            new ReadOnlyObservableCollection<ItemReport>(ObservableItemReports);
-        //new List<IItemReport>(ObservableItemReports).AsReadOnly();
+        /// <summary>
+        /// LocalItemReports updates when Refresh() or SubmitItem() is called
+        /// </summary>
+        public ReadOnlyObservableCollection<ItemReport> LocalItemReports => 
+            new ReadOnlyObservableCollection<ItemReport>(EditableLocalItemReports);
 
-        private ObservableCollection<ItemReport> _ObservableItemReports = null;
-        protected ObservableCollection<ItemReport> ObservableItemReports
+        protected ObservableCollection<ItemReport> EditableLocalItemReports { get; private set; } = 
+            new ObservableCollection<ItemReport>();
+
+        public abstract Task<int> SubmitItem(ItemReport item_report);
+
+        public abstract Task Refresh(LocationCoordinates location, double radius_miles);
+
+        public IValidator<ItemReport> ItemReportValidator { get; set; }
+
+        protected ItemReportStorage(IValidator<ItemReport> item_report_validator)
         {
-            get
-            {
-                return _ObservableItemReports;
-            }
-            set
-            {
-                if(_ObservableItemReports != null)
-                {
-                    _ObservableItemReports.CollectionChanged -= Value_CollectionChanged;
-                }
-                value.CollectionChanged += Value_CollectionChanged;
-                _ObservableItemReports = value;
-            }
-        }
-
-        public event NotifyCollectionChangedEventHandler ItemReportsChanged;
-
-        public abstract int SubmitItem(ItemReport item_report);
-
-        private void Value_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
-        {
-            ItemReportsChanged?.Invoke(this, e);
+            this.ItemReportValidator = item_report_validator;
         }
 
         /// <summary>
@@ -48,15 +41,8 @@ namespace SalvageIt.Models
         /// <returns></returns>
         protected void AssertItemReportValid(ItemReport item_report)
         {
-            if(item_report.ItemPhoto == null)
-            {
-                throw new Exception("Item reports require a photo");
-            }
-
-            if(item_report.ItemLocation == null)
-            {
-                throw new Exception("Item reports require a location");
-            }
+            IEnumerable<string> broken_rules = ItemReportValidator.BrokenRules(item_report);
+            if (broken_rules.Count() > 0) throw new DataInvalidException(broken_rules);
         }
     }
 }
