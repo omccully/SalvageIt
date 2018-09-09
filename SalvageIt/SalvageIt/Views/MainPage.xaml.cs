@@ -17,12 +17,9 @@ namespace SalvageIt.Views
         {
             InitializeComponent();
 
-            BindingContext = new MainViewModel(Navigation,
-                DependencyService.Get<ItemReportStorage>(),
-                DependencyService.Get<IGeolocator>());
-
-            ReportItemsListView.ItemsSource = 
-                DependencyService.Get<ItemReportStorage>().LocalItemReports;
+            //BindingContext = new MainViewModel(Navigation,
+            //    DependencyService.Get<ItemReportStorage>(),
+            //    DependencyService.Get<IGeolocator>());
         }
     }
 }

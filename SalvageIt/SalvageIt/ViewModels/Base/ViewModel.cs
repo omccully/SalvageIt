@@ -5,10 +5,15 @@ using System.Text;
 
 namespace SalvageIt.ViewModels
 {
-    public class BaseViewModel : INotifyPropertyChanged
+    using Navigation;
+    using System.Threading.Tasks;
+
+    public abstract class ViewModel : INotifyPropertyChanged
     {
-        // This code is not mine. It gets generated when you 
+        // Most code here is not mine. It gets generated when you 
         // create a Xamarin.Forms app and you select the MVVM example 
+
+        public INavigationService NavigationService { get; set; }
 
         bool isBusy = false;
         public bool IsBusy
@@ -22,6 +27,16 @@ namespace SalvageIt.ViewModels
         {
             get { return title; }
             set { SetProperty(ref title, value); }
+        }
+
+        public virtual Task InitializeAsync(object navigation_data)
+        {
+            return Task.CompletedTask;
+        }
+
+        public virtual Task ReturnToAsync(object return_data)
+        {
+            return Task.CompletedTask;
         }
 
         protected bool SetProperty<T>(ref T backingStore, T value,
@@ -41,11 +56,8 @@ namespace SalvageIt.ViewModels
         public event PropertyChangedEventHandler PropertyChanged;
         protected void OnPropertyChanged(string propertyName = "")
         {
-            var changed = PropertyChanged;
-            if (changed == null)
-                return;
-
-            changed.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            PropertyChanged?.Invoke(this, 
+                new PropertyChangedEventArgs(propertyName));
         }
         #endregion
     }

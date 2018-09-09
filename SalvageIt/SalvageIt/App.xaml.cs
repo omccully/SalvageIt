@@ -6,7 +6,9 @@ using Xamarin.Forms.Xaml;
 namespace SalvageIt
 {
     using Views;
+    using ViewModels;
     using Services;
+    using System.Threading.Tasks;
 
     public partial class App : Application
     {
@@ -14,7 +16,22 @@ namespace SalvageIt
         {
             InitializeComponent();
 
-            MainPage = new NavigationPage(new MainPage());
+            //MainPage = new NavigationPage(new MainPage());
+            init();
+        }
+
+        async Task init()
+        {
+            try
+            {
+                await ViewModelLocator.NavigationService.InitializeAsync();
+
+            }catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine("EEE" + e.ToString());
+                throw e;
+            }
+            
         }
 
         protected override void OnStart()

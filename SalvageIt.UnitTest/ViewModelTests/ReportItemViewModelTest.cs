@@ -5,6 +5,9 @@ using Moq;
 using Xamarin.Forms;
 using SalvageIt.Services;
 using System.Threading.Tasks;
+using SalvageIt.ViewModels.Navigation;
+using System;
+using SalvageIt.Models.Validators;
 
 namespace SalvageIt.UnitTest.ViewModelTests
 {
@@ -22,8 +25,8 @@ namespace SalvageIt.UnitTest.ViewModelTests
         LocationCoordinates MicrosoftHQ =
             new LocationCoordinates(47.6424779, -122.136859);
 
-        INavigation nav;
-        Mock<INavigation> nav_mock;
+        INavigationService nav;
+        Mock<INavigationService> nav_mock;
 
 
 
@@ -46,7 +49,7 @@ namespace SalvageIt.UnitTest.ViewModelTests
         [TestInitialize()]
         public void Startup()
         {
-            nav_mock = new Mock<INavigation>();
+            nav_mock = new Mock<INavigationService>();
             nav = nav_mock.Object;
 
             toaster_mock = new Mock<IToaster>();
@@ -64,13 +67,12 @@ namespace SalvageIt.UnitTest.ViewModelTests
 
         void EnterAllDataAndSubmitAsync()
         {
-
-
             string title_input = "A couch I found";
             string description_input = "Looks alright";
 
             ReportItemViewModel vm = new ReportItemViewModel(
-                nav, pic_taker, null, item_report_storage);
+                pic_taker, null, item_report_storage);
+            vm.NavigationService = nav;
 
             vm.TitleInputText = title_input;
             vm.DescriptionInputText = description_input;
@@ -96,34 +98,33 @@ namespace SalvageIt.UnitTest.ViewModelTests
             vm.SubmitButtonCommand.Execute(null);
 
             
-            nav_mock.Verify(n => n.PopAsync());
+            nav_mock.Verify(n => n.GoBackAsync(item_report_from_event));
 
             // make sure the ItemReport that was put in storage
             // matches the input
-            Assert.IsTrue(item_report_storage.LocalItemReports.Count == 1);
+            Assert.AreEqual(1, item_report_storage.LocalItemReports.Count);
+
             ItemReport ir = item_report_storage.LocalItemReports[0];
-            Assert.IsTrue(ir.Title == title_input);
-            Assert.IsTrue(ir.Description == description_input);
-            Assert.IsTrue(ir.ItemLocation == MicrosoftHQ);
-            Assert.IsTrue(ir.ItemPhoto == ImageSourceExample);
+
+            Assert.AreEqual(title_input, ir.Title);
+            Assert.AreEqual(description_input, ir.Description);
+            Assert.AreEqual(MicrosoftHQ, ir.ItemLocation);
+            Assert.AreEqual(ImageSourceExample, ir.ItemPhoto);
 
             // make sure the ItemReport from event is the same
             // as the one found in storage
-            Assert.IsTrue(item_report_from_event != null &&
-                item_report_from_event == ir);
+            Assert.IsNotNull(item_report_from_event);
+            Assert.AreEqual(ir, item_report_from_event);
 
 
             // TODO: test to make sure INotifyPropertyChanged is working
         }
 
         [TestMethod]
-        public void MissingTitleSubmit()
+        public void ExceptionThrownWhenSubmitting()
         {
-            // keep ItemReportStorage and Navigation = null
             ReportItemViewModel vm = new ReportItemViewModel(
-                null, pic_taker, toaster, null);
-
-            
+                pic_taker, toaster, null);
 
             vm.DescriptionInputText = "Looks alright";
 
@@ -135,8 +136,9 @@ namespace SalvageIt.UnitTest.ViewModelTests
 
             vm.SubmitButtonCommand.Execute(null);
             
-
-            toaster_mock.Verify(t => t.DisplayError("You must enter a title"));
+            // ItemReportStorage not set, so throws exception
+            toaster_mock.Verify(t => t.DisplayError(
+                "Object reference not set to an instance of an object."));
         }
     }
 }

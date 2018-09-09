@@ -10,19 +10,18 @@ namespace SalvageIt.ViewModels
     using Services;
     using Models;
     using Views;
+    using Navigation;
+    using Models.Validators;
 
-    public class ReportItemViewModel : BaseViewModel
+    public class ReportItemViewModel : ViewModel
     {
-        INavigation Navigation;
         IPictureTaker PictureTaker;
         IToaster Toaster;
         ItemReportStorage ItemReportStorage;
 
-        public ReportItemViewModel(INavigation navigation, 
-            IPictureTaker picture_taker, IToaster toaster,
-            ItemReportStorage item_report_storage)
+        public ReportItemViewModel(IPictureTaker picture_taker, 
+            IToaster toaster, ItemReportStorage item_report_storage)
         {
-            this.Navigation = navigation;
             this.PictureTaker = picture_taker;
             this.Toaster = toaster;
             this.ItemReportStorage = item_report_storage;
@@ -47,17 +46,17 @@ namespace SalvageIt.ViewModels
 
         async void SelectLocationAction()
         {
-            SelectLocationPage select_loc_page = new SelectLocationPage();
-            select_loc_page.LocationChosen += Select_loc_page_LocationChosen;
-            await Navigation.PushAsync(select_loc_page);
+            //SelectLocationPage select_loc_page = new SelectLocationPage();
+            //select_loc_page.LocationChosen += Select_loc_page_LocationChosen;
+            //await Navigation.PushAsync(select_loc_page);
+
+            await NavigationService.NavigateToAsync<SelectLocationViewModel>();
         }
 
-        private void Select_loc_page_LocationChosen(object sender, LocationCoordinatesEventArgs e)
+        public override Task ReturnToAsync(object return_data)
         {
-            SelectLocationPage select_loc_page = (SelectLocationPage)sender;
-            select_loc_page.LocationChosen -= Select_loc_page_LocationChosen;
-
-            SelectedLocation = e.LocationCoordinates;
+            SelectedLocation = (LocationCoordinates)return_data;
+            return Task.CompletedTask;
         }
 
         string _SelectedLocationText;
@@ -181,7 +180,7 @@ namespace SalvageIt.ViewModels
             try
             {
                 int ID = await ItemReportStorage.SubmitItem(ir);
-                await Navigation.PopAsync();
+                await NavigationService.GoBackAsync(ir);
                 OnReportItemSubmitted(ir);
             }
             catch(Exception e)

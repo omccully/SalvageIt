@@ -11,23 +11,25 @@ namespace SalvageIt.ViewModels
 {
     using Models;
     using Services;
+    using Navigation;
+    using System.Threading.Tasks;
 
-    public class MainViewModel : BaseViewModel
+    public class MainViewModel : ViewModel
     {
-        INavigation Navigation;
         ItemReportStorage ItemReportStorage;
         IGeolocator Geolocator;
 
-        public MainViewModel(INavigation navigation, 
-            ItemReportStorage item_report_storage, IGeolocator geolocator)
+        public MainViewModel(ItemReportStorage item_report_storage, 
+            IGeolocator geolocator)
         {
-            this.Navigation = navigation;
             this.ItemReportStorage = item_report_storage;
-
+            this.LocalItemReports = item_report_storage.LocalItemReports;
             this.Geolocator = geolocator;
 
             RefreshActionAsync();
         }
+
+        public ReadOnlyObservableCollection<ItemReport> LocalItemReports { get; set; } 
 
         ICommand _ReportItemCommand;
         public ICommand ReportItemCommand
@@ -41,7 +43,7 @@ namespace SalvageIt.ViewModels
 
         void ReportItemAction()
         {
-            Navigation.PushAsync(new ReportItemPage());
+            NavigationService.NavigateToAsync<ReportItemViewModel>();
         }
 
         public ICommand AddReportTest
