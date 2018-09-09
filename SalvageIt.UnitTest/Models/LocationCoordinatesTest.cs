@@ -1,7 +1,7 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using SalvageIt.Models;
 
-namespace SalvageIt.UnitTest.ModelTests
+namespace SalvageIt.UnitTest.Models
 {
     [TestClass]
     public class LocationCoordinatesTest

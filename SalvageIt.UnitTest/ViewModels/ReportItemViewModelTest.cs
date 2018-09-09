@@ -9,7 +9,7 @@ using SalvageIt.ViewModels.Navigation;
 using System;
 using SalvageIt.Models.Validators;
 
-namespace SalvageIt.UnitTest.ViewModelTests
+namespace SalvageIt.UnitTest.ViewModels
 {
     class ImageSourceExample : ImageSource
     {

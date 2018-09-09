@@ -68,7 +68,8 @@ namespace SalvageIt.ViewModels
             }
             private set
             {
-                SetProperty(ref _SelectedLocationText, value);
+                SetProperty(ref _SelectedLocationText, value,
+                    "SelectedLocationText");
             }
         }
 
@@ -81,7 +82,8 @@ namespace SalvageIt.ViewModels
             }
             set
             {
-                SetProperty(ref _SelectedLocation, value);
+                SetProperty(ref _SelectedLocation, value,
+                    "SelectedLocation");
                 SelectedLocationText = value.ToString();
             }
         }
@@ -109,7 +111,8 @@ namespace SalvageIt.ViewModels
             }
             set
             {
-                SetProperty(ref _PhotoTaken, value);
+                SetProperty(ref _PhotoTaken, value,
+                    "PhotoTaken");
             }
         }
         
@@ -137,7 +140,8 @@ namespace SalvageIt.ViewModels
             }
             set
             {
-                SetProperty(ref _TitleInputText, value);
+                SetProperty(ref _TitleInputText, value,
+                    "TitleInputText");
             }
         }
 
@@ -150,7 +154,8 @@ namespace SalvageIt.ViewModels
             }
             set
             {
-                SetProperty(ref _DescriptionInputText, value);
+                SetProperty(ref _DescriptionInputText, value,
+                    "DescriptionInputText");
             }
         }
 

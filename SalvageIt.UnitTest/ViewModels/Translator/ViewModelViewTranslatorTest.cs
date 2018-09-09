@@ -6,7 +6,7 @@ using SalvageIt.ViewModels;
 using SalvageIt.ViewModels.Translator;
 using SalvageIt.Views;
 
-namespace SalvageIt.UnitTest.ViewModelTests.Translator
+namespace SalvageIt.UnitTest.ViewModels.Translator
 {
     [TestClass]
     public class ViewModelViewTranslatorTest

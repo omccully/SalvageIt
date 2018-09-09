@@ -49,8 +49,6 @@ namespace SalvageIt.ViewModels.Translator
             string page_removed = r.Replace(v_namespace, "Page");
 
             return page_removed;
-
-            return vm_full_name.Replace("Model", string.Empty) + "Page";
         }
     }
 }
