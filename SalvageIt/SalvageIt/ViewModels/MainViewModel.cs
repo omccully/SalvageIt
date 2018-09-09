@@ -91,7 +91,8 @@ namespace SalvageIt.ViewModels
             }
             set
             {
-                SetProperty(ref _IsRefreshing, value);
+                SetProperty(ref _IsRefreshing, value,
+                    "IsRefreshing");
             }
         }
     }
