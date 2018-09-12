@@ -25,6 +25,16 @@ namespace SalvageIt.ViewModels
             return Task.CompletedTask;
         }
 
+        public override Task ReturnToAsync(object return_data)
+        {
+            ItemReport ir = (ItemReport)return_data;
+            if(ir != null)
+            {
+                ItemReport = ir;
+            }
+            return Task.CompletedTask;
+        }
+
         ItemReport _ItemReport;
         public ItemReport ItemReport
         {

@@ -10,6 +10,8 @@ namespace SalvageIt.Services
     {
         public static string ToUserFriendlyString(this TimeSpan ts)
         {
+            if (ts < TimeSpan.FromMinutes(1))
+                return PluralizeUnit((int)ts.TotalSeconds, "second");
             if (ts < TimeSpan.FromHours(1))
                 return PluralizeUnit((int)ts.TotalMinutes, "minute");
             if (ts < TimeSpan.FromDays(1))

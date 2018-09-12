@@ -30,6 +30,7 @@
                 <Button Text="Open maps navigation"
                     Command="{Binding NavigateToItemCommand}" />
                 <Button Text="Edit item report"
+                    IsVisible="{Binding ItemReport.IsMine}"
                     Command="{Binding EditItemReportCommand}" />
             </StackLayout>
         </ScrollView>

@@ -34,6 +34,15 @@ namespace SalvageIt.Models
         public override async Task Refresh(LocationCoordinates location, double radius_miles)
         {
             await Task.Delay(500);
+
+            List<ItemReport> item_reports = 
+                new List<ItemReport>(LocalItemReports);
+
+            EditableLocalItemReports.Clear();
+            foreach(ItemReport ir in item_reports)
+            {
+                EditableLocalItemReports.Add(ir);
+            }
         }
 
         public override async Task<int> SubmitItem(ItemReport item_report)

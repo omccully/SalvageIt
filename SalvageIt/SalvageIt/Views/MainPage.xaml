@@ -28,8 +28,9 @@
               <StackLayout BackgroundColor="#eee"
                     Orientation="Horizontal">
                 <Image Source="{Binding ItemPhoto}" />
-                <StackLayout Orientation="Vertical">
-                  <Label Text="{Binding Title}"
+                <StackLayout Orientation="Vertical"
+                             HorizontalOptions="FillAndExpand">
+                                <Label Text="{Binding Title}"
                          FontAttributes="Bold" />
                   <Label Text="{Binding Description}"
                          LineBreakMode="TailTruncation" />
