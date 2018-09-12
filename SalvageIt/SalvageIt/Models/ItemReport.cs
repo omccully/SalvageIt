@@ -39,21 +39,5 @@ namespace SalvageIt.Models
 
             return sb.ToString();
         }
-
-        public TimeSpan TimeSincePosted
-        {
-            get
-            {
-                return DateTime.Now - ReportTime;
-            }
-        }
-
-        public string TimeSincePostedString
-        {
-            get
-            {
-                return TimeSincePosted.ToUserFriendlyString();
-            }
-        }
     }
 }

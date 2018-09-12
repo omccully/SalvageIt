@@ -24,7 +24,8 @@
                 <Label Text="{Binding ItemReport.ItemLocation,
                 Converter={StaticResource ToDistanceConverter}}"
                 HorizontalTextAlignment="End" />
-                <Label Text="{Binding ItemReport.TimeSincePostedString}"
+                <Label Text="{Binding ItemReport.ReportTime,
+                         Converter={StaticResource ToTimeAgoConverter}}"
                 HorizontalTextAlignment="End"  />
                 <Button Text="Open maps navigation"
                     Command="{Binding NavigateToItemCommand}" />

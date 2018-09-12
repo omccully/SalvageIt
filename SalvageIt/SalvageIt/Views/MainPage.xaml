@@ -36,7 +36,8 @@
                   <Label Text="{Binding ItemLocation,
                          Converter={StaticResource ToDistanceConverter}}"
                          HorizontalTextAlignment="End" />
-                  <Label Text="{Binding TimeSincePostedString}"
+                  <Label Text="{Binding ReportTime,
+                         Converter={StaticResource ToTimeAgoConverter}}"
                          HorizontalTextAlignment="End"  />
                 </StackLayout>
               </StackLayout>
