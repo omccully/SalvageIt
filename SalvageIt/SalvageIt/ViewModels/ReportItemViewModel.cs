@@ -64,7 +64,8 @@ namespace SalvageIt.ViewModels
 
         async void SelectLocationAction()
         {
-            await NavigationService.NavigateToAsync<SelectLocationViewModel>();
+            await NavigationService.NavigateToAsync<SelectLocationViewModel>(
+                SelectedLocation);
         }
 
         ICommand _UseCurrentLocationCommand;
