@@ -89,6 +89,13 @@ namespace SalvageIt.ViewModels
         private static void OnAutoWireViewModelChanged(BindableObject bindable, object oldValue, object newValue)
         {
             bindable.BindingContext = CreateViewModelForPage(bindable as Page);
+
+            // bind cp.Title to vm.Title
+            ContentPage cp = bindable as ContentPage;
+            if (cp != null)
+            {
+                cp.SetBinding(ContentPage.TitleProperty, "Title");
+            }
         }
 
         public static ViewModel CreateViewModelForPage(Page page)

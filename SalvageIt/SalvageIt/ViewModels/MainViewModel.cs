@@ -25,6 +25,7 @@ namespace SalvageIt.ViewModels
             this.ItemReportStorage = item_report_storage;
             this.LocalItemReports = item_report_storage.LocalItemReports;
             this.Geolocator = geolocator;
+            this.Title = "Salvage It";
 
             RefreshActionAsync();
         }

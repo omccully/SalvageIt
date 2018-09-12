@@ -25,6 +25,8 @@ namespace SalvageIt.ViewModels
             this.PictureTaker = picture_taker;
             this.Toaster = toaster;
             this.ItemReportStorage = item_report_storage;
+
+            this.Title = "Create new item report";
         }
 
         public event EventHandler<ItemReportEventArgs> ReportItemSubmitted;
