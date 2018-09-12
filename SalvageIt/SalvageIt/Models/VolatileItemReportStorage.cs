@@ -29,7 +29,8 @@ namespace SalvageIt.Models
             {
                 foreach (ItemReport ir in initial_data)
                 {
-                    EditableLocalItemReports.Add(ir);
+                    //EditableLocalItemReports.Add(ir);
+                    AddItemReportInOrder(ir);
                 }
             }
         }
@@ -64,7 +65,8 @@ namespace SalvageIt.Models
                 item_report.EditTime = item_report.ReportTime;
                 item_report.IsMine = true;
 
-                EditableLocalItemReports.Add(item_report);
+                //EditableLocalItemReports.Add(item_report);
+                AddItemReportInOrder(item_report);
                 return id;
             }
             else
@@ -85,7 +87,7 @@ namespace SalvageIt.Models
                         item_report.IsMine = true;
 
                         EditableLocalItemReports.RemoveAt(i);
-                        EditableLocalItemReports.Add(item_report);
+                        EditableLocalItemReports.Insert(i, item_report);
                         return item_report.ID;
                     }
                     i++;

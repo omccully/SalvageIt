@@ -50,5 +50,20 @@ namespace SalvageIt.Models
             IEnumerable<string> broken_rules = ItemReportValidator.BrokenRules(item_report);
             if (broken_rules.Count() > 0) throw new DataInvalidException(broken_rules);
         }
+
+        protected void AddItemReportInOrder(ItemReport ir_to_insert)
+        {
+            int i = 0;
+            foreach (ItemReport ir in EditableLocalItemReports)
+            {
+                if(ir.ReportTime < ir_to_insert.ReportTime)
+                {
+                    EditableLocalItemReports.Insert(i, ir_to_insert);
+                    return;
+                }
+                i++;
+            }
+            EditableLocalItemReports.Add(ir_to_insert);
+        }
     }
 }
