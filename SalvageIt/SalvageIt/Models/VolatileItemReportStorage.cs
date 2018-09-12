@@ -42,20 +42,32 @@ namespace SalvageIt.Models
                     EditableLocalItemReports.Max(ir => ir.ID) : 0;
 
                 int id = max_or_zero + 1;
+
                 item_report.ID = id;
+                item_report.ReportTime = DateTime.Now;
+                item_report.EditTime = item_report.ReportTime;
+                item_report.IsMine = true;
+
                 EditableLocalItemReports.Add(item_report);
                 return id;
             }
             else
-            {
-                // when cloud storage is implemented, this should 
-                // check the user credentials to make sure they're allowed
-                // to edit that ItemReport.
+            { 
                 int i = 0;
                 foreach(ItemReport ir in EditableLocalItemReports)
                 {
                     if(ir.ID == item_report.ID)
                     {
+                        if(!ir.IsMine)
+                        {
+                            // this should be verified server-side as well
+                            throw new Exception(
+                                "You do not have permission to edit this item report.");
+                        }
+                        item_report.ReportTime = ir.ReportTime;
+                        item_report.EditTime = DateTime.Now;
+                        item_report.IsMine = true;
+
                         EditableLocalItemReports.RemoveAt(i);
                         EditableLocalItemReports.Add(item_report);
                         return item_report.ID;

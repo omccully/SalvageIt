@@ -23,6 +23,12 @@ namespace SalvageIt.Models
         protected ObservableCollection<ItemReport> EditableLocalItemReports { get; private set; } = 
             new ObservableCollection<ItemReport>();
 
+        /// <summary>
+        /// SubmitItem is responsible for the ItemReport's ID, IsMine,
+        /// ReportTime and EditTime fields
+        /// </summary>
+        /// <param name="item_report"></param>
+        /// <returns></returns>
         public abstract Task<int> SubmitItem(ItemReport item_report);
 
         public abstract Task Refresh(LocationCoordinates location, double radius_miles);

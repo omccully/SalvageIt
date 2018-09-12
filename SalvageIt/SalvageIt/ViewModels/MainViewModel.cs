@@ -6,13 +6,13 @@ using System.Windows.Input;
 using Xamarin.Forms;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Threading.Tasks;
 
 namespace SalvageIt.ViewModels
 {
     using Models;
     using Services;
     using Navigation;
-    using System.Threading.Tasks;
 
     public class MainViewModel : ViewModel
     {
@@ -95,6 +95,21 @@ namespace SalvageIt.ViewModels
                 SetProperty(ref _IsRefreshing, value,
                     "IsRefreshing");
             }
+        }
+
+        ICommand _SelectItemReportCommand;
+        public ICommand SelectItemReportCommand
+        {
+            get
+            {
+                return _SelectItemReportCommand ??
+                    (_SelectItemReportCommand = new Command(SelectItemReportAction));
+            }
+        }
+
+        void SelectItemReportAction(object item_report_obj)
+        {
+            NavigationService.NavigateToAsync<ViewItemReportViewModel>(item_report_obj);
         }
     }
 }

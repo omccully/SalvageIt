@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             xmlns:local="clr-namespace:SalvageIt"
+             xmlns:converters="clr-namespace:SalvageIt.Services.Converters"
              xmlns:viewModel="clr-namespace:SalvageIt.ViewModels;assembly=SalvageIt"
              x:Class="SalvageIt.Views.MainPage"
              viewModel:ViewModelLocator.AutoWireViewModel="true">
   <ContentPage.Resources>
     <ResourceDictionary>
-      <local:StringConverter x:Key="ToStringConverter" />
-      <local:DateTimeToTimeAgoConverter x:Key="ToTimeAgoConverter" />
-      <local:LocationToDistanceConverter x:Key="ToDistanceConverter" />
+        <converters:StringConverter x:Key="ToStringConverter" />
+        <converters:DateTimeToTimeAgoConverter x:Key="ToTimeAgoConverter" />
+        <converters:LocationToDistanceConverter x:Key="ToDistanceConverter" />
     </ResourceDictionary>
   </ContentPage.Resources>
 
@@ -19,12 +19,14 @@
                 IsPullToRefreshEnabled="True"
                 RefreshCommand="{Binding RefreshCommand}"
                 IsRefreshing="{Binding IsRefreshing}"
-                ItemsSource="{Binding LocalItemReports}">
+                ItemsSource="{Binding LocalItemReports}"
+                SelectionMode="Single"
+                ItemTapped="ReportItemsListView_ItemTapped">
         <ListView.ItemTemplate>
           <DataTemplate>
             <ViewCell>
               <StackLayout BackgroundColor="#eee"
-              Orientation="Horizontal">
+                    Orientation="Horizontal">
                 <Image Source="{Binding ItemPhoto}" />
                 <StackLayout Orientation="Vertical">
                   <Label Text="{Binding Title}"

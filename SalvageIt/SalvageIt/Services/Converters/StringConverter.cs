@@ -4,7 +4,7 @@ using System.Text;
 using Xamarin.Forms;
 
 // This needs to be in the base namespace to be accessed from XAML?
-namespace SalvageIt
+namespace SalvageIt.Services.Converters
 {
     public class StringConverter : IValueConverter
     {

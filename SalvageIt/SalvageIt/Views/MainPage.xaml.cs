@@ -13,13 +13,17 @@ namespace SalvageIt.Views
 
     public partial class MainPage : ContentPage
     {
+        MainViewModel Vm;
+
         public MainPage()
         {
             InitializeComponent();
+            this.Vm = (MainViewModel)BindingContext;
+        }
 
-            //BindingContext = new MainViewModel(Navigation,
-            //    DependencyService.Get<ItemReportStorage>(),
-            //    DependencyService.Get<IGeolocator>());
+        private void ReportItemsListView_ItemTapped(object sender, ItemTappedEventArgs e)
+        {
+            Vm.SelectItemReportCommand.Execute(e.Item);
         }
     }
 }

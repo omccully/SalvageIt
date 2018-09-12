@@ -4,7 +4,7 @@ using System.Globalization;
 using System.Text;
 using Xamarin.Forms;
 
-namespace SalvageIt
+namespace SalvageIt.Services.Converters
 {
     using Services;
     using Models;

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:converters="clr-namespace:SalvageIt.Services.Converters"
+             xmlns:viewModel="clr-namespace:SalvageIt.ViewModels;assembly=SalvageIt"
+             x:Class="SalvageIt.Views.ViewItemReportPage"
+             viewModel:ViewModelLocator.AutoWireViewModel="true"
+             Title="{Binding Title}">
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:StringConverter x:Key="ToStringConverter" />
+            <converters:DateTimeToTimeAgoConverter x:Key="ToTimeAgoConverter" />
+            <converters:LocationToDistanceConverter x:Key="ToDistanceConverter" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Orientation="Vertical">
+                <Image Source="{Binding ItemReport.ItemPhoto}" />
+                <Label Text="{Binding  ItemReport.Title}"
+                FontAttributes="Bold" />
+                <Label Text="{Binding ItemReport.Description}"
+                LineBreakMode="TailTruncation" />
+                <Label Text="{Binding ItemReport.ItemLocation,
+                Converter={StaticResource ToDistanceConverter}}"
+                HorizontalTextAlignment="End" />
+                <Label Text="{Binding ItemReport.TimeSincePostedString}"
+                HorizontalTextAlignment="End"  />
+                <Button Text="Open maps navigation"
+                    Command="{Binding NavigateToItemCommand}" />
+                <Button Text="Edit item report"
+                    Command="{Binding EditItemReportCommand}" />
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

@@ -9,16 +9,12 @@ using Xamarin.Forms.Xaml;
 
 namespace SalvageIt.Views
 {
-    using Services;
-    using ViewModels;
-    using Models;
-
     [XamlCompilation(XamlCompilationOptions.Compile)]
-	public partial class ReportItemPage : ContentPage
-    { 
-        public ReportItemPage ()
-		{
-			InitializeComponent ();
+    public partial class ViewItemReportPage : ContentPage
+    {
+        public ViewItemReportPage()
+        {
+            InitializeComponent();
         }
     }
 }

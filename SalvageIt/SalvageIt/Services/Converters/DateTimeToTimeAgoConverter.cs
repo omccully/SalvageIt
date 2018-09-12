@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using Xamarin.Forms;
 
-namespace SalvageIt
+namespace SalvageIt.Services.Converters
 {
     using Services;
 

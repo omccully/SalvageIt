@@ -17,6 +17,7 @@ namespace SalvageIt.ViewModels
     using SalvageIt.Models.Validators;
     using Translator;
     using Navigation;
+    using Unity.Lifetime;
 
     public static class ViewModelLocator
     {
@@ -34,13 +35,28 @@ namespace SalvageIt.ViewModels
 
             _container.RegisterType<IGeolocator, Geolocator>(new InjectionConstructor());
             _container.RegisterType<IPictureTaker, PictureTaker>();
-            _container.RegisterType<ItemReportStorage, VolatileItemReportStorage>();
             _container.RegisterType<IPictureSelector, PictureSelector>();
             _container.RegisterType<IValidator<ItemReport>, SubmitItemReportValidator>();
-            _container.RegisterInstance<IToaster>(DependencyService.Get<IToaster>());
             _container.RegisterType<IViewModelViewTranslator, ViewModelViewTranslator>();
             _container.RegisterType<INavigationService, NavigationService>();
+            _container.RegisterType<IMapsNavigation, MapsNavigation>();
+            _container.RegisterInstance<IToaster>(DependencyService.Get<IToaster>());
+            _container.RegisterType<ItemReportStorage, VolatileItemReportStorage>(
+                new ContainerControlledLifetimeManager());
 
+#if DEBUG
+            var uis = new UriImageSource();
+            uis.Uri = new Uri("http://png.icons8.com/metro/1600/settings.png");
+            var irs1 = _container.Resolve<ItemReportStorage>();
+
+            irs1.SubmitItem(new ItemReport()
+            {
+                Title = "vml item",
+                ItemPhoto = uis,
+                ItemLocation = new LocationCoordinates(42.2440242, -83.6222102),
+                ReportTime = new DateTime(2018, 9, 8)
+            });
+#endif
         }
 
         public static INavigationService NavigationService
@@ -58,24 +74,6 @@ namespace SalvageIt.ViewModels
                 return _container.Resolve<IViewModelViewTranslator>();
             }
         }
-
-        /*static string ViewFullNameToViewModelFullName(string view_full_name)
-        {
-            string vm_namespace = view_full_name.Replace(".Views.", ".ViewModels.");
-
-            Regex r = new Regex("Page$");
-            string page_removed = r.Replace(vm_namespace, delegate { return ""; });
-
-            return page_removed + "ViewModel";
-        }
-
-        static Type GetViewModelTypeForPage(Type view_type)
-        {
-            string vm_fullname = ViewFullNameToViewModelFullName(view_type.FullName);
-            string assembly_fullname = view_type.GetTypeInfo().Assembly.FullName;
-
-            return Type.GetType($"{vm_fullname}, {assembly_fullname}");
-        }*/
 
         public static bool GetAutoWireViewModel(BindableObject bindable)
         {

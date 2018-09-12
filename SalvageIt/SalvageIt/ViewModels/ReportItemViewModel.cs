@@ -16,23 +16,36 @@ namespace SalvageIt.ViewModels
     public class ReportItemViewModel : ViewModel
     {
         IPictureTaker PictureTaker;
+        IPictureSelector PictureSelector;
         IToaster Toaster;
         ItemReportStorage ItemReportStorage;
 
         public ReportItemViewModel(IPictureTaker picture_taker, 
-            IToaster toaster, ItemReportStorage item_report_storage)
+            IPictureSelector picture_selector, IToaster toaster, 
+            ItemReportStorage item_report_storage)
         {
             this.PictureTaker = picture_taker;
+            this.PictureSelector = picture_selector;
             this.Toaster = toaster;
             this.ItemReportStorage = item_report_storage;
 
             this.Title = "Create new item report";
         }
 
-        public event EventHandler<ItemReportEventArgs> ReportItemSubmitted;
-        protected void OnReportItemSubmitted(ItemReport item_report)
+        ItemReport EditingItemReport = null;
+        public override Task InitializeAsync(object navigation_data)
         {
-            ReportItemSubmitted?.Invoke(this, new ItemReportEventArgs(item_report));
+            EditingItemReport = navigation_data as ItemReport;
+            if(EditingItemReport != null)
+            {
+                this.Title = "Edit item report";
+                TitleInputText = EditingItemReport.Title;
+                DescriptionInputText = EditingItemReport.Description;
+                SelectedLocation = EditingItemReport.ItemLocation;
+                PhotoSelection = EditingItemReport.ItemPhoto;
+            }
+
+            return Task.CompletedTask;
         }
 
         #region Item geolocator
@@ -199,14 +212,21 @@ namespace SalvageIt.ViewModels
 
         async void SubmitButtonAction()
         {
+            // ItemReportStorage is responsible for the ReportTime,
+            // EditTime, IsMine, and setting the ID when creating
+
             ItemReport ir = new ItemReport()
             {
                 Title = TitleInputText,
                 Description = DescriptionInputText,
                 ItemLocation = SelectedLocation,
-                ItemPhoto = PhotoTaken,
-                ReportTime = DateTime.Now
+                ItemPhoto = PhotoSelection
             };
+
+            if(EditingItemReport != null)
+            {
+                ir.ID = EditingItemReport.ID;
+            }
 
             System.Diagnostics.Debug.WriteLine(ir);
 
@@ -214,7 +234,6 @@ namespace SalvageIt.ViewModels
             {
                 int ID = await ItemReportStorage.SubmitItem(ir);
                 await NavigationService.GoBackAsync(ir);
-                OnReportItemSubmitted(ir);
             }
             catch(Exception e)
             {

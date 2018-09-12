@@ -16,6 +16,10 @@ namespace SalvageIt.Models
         public LocationCoordinates ItemLocation { get; set; }
         public ImageSource ItemPhoto { get; set; }
         public DateTime ReportTime { get; set; }
+        public DateTime EditTime { get; set; }
+
+        public bool IsMine { get; set; } = false;
+
 
         public override string ToString()
         {

@@ -30,9 +30,6 @@ namespace SalvageIt.Models.Validators
             if (item_report.ItemLocation == null)
                 yield return "You must select a location first";
 
-            if (item_report.ReportTime == DateTime.MinValue)
-                yield return "Item reports require a date and a time";
-
             yield break;
         }
 
