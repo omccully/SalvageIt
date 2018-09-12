@@ -35,6 +35,7 @@ namespace SalvageIt.ViewModels
             _container.RegisterType<IGeolocator, Geolocator>(new InjectionConstructor());
             _container.RegisterType<IPictureTaker, PictureTaker>();
             _container.RegisterType<ItemReportStorage, VolatileItemReportStorage>();
+            _container.RegisterType<IPictureSelector, PictureSelector>();
             _container.RegisterType<IValidator<ItemReport>, SubmitItemReportValidator>();
             _container.RegisterInstance<IToaster>(DependencyService.Get<IToaster>());
             _container.RegisterType<IViewModelViewTranslator, ViewModelViewTranslator>();

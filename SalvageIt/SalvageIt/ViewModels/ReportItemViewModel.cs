@@ -91,7 +91,7 @@ namespace SalvageIt.ViewModels
         }
         #endregion
 
-        #region Camera
+        #region Select image
         ICommand _CameraButtonCommand;
         public ICommand CameraButtonCommand
         {
@@ -102,33 +102,59 @@ namespace SalvageIt.ViewModels
             }
         }
 
-        public string PhotoStatusText { get; private set; } = "No picture taken yet";
+        async void CameraButtonAction()
+        {
+            PhotoSelection = await PictureTaker.TakePicture();
+        }
 
-        ImageSource _PhotoTaken;
-        public ImageSource PhotoTaken
+        ICommand _SelectPhotoCommand;
+        public ICommand SelectPhotoCommand
         {
             get
             {
-                return _PhotoTaken;
+                return _SelectPhotoCommand ??
+                    (_SelectPhotoCommand = new Command(SelectPhotoAction));
+            }
+        }
+
+        async void SelectPhotoAction()
+        {
+            PhotoSelection = await PictureSelector.SelectPicture();
+        }
+
+        string _PhotoStatusText = "No picture taken yet";
+        public string PhotoStatusText {
+            get
+            {
+                return _PhotoStatusText;
+            }
+            private set
+            {
+                SetProperty(ref _PhotoStatusText, value,
+                   "PhotoStatusText");
+            }
+        } 
+
+        ImageSource _PhotoSelection;
+        public ImageSource PhotoSelection
+        {
+            get
+            {
+                return _PhotoSelection;
             }
             set
             {
-                SetProperty(ref _PhotoTaken, value,
-                    "PhotoTaken");
-            }
-        }
-        
-        async void CameraButtonAction()
-        {
-            PhotoTaken = await PictureTaker.TakePicture();
+                SetProperty(ref _PhotoSelection, value,
+                    "PhotoSelection");
 
-            if(PhotoTaken != null)
-            {
-                PhotoStatusText = "Picture taken successfully";
-            }
-            else
-            {
-                PhotoStatusText = "Picture failed";
+                if (value != null)
+                {
+                    PhotoStatusText = "Picture taken successfully";
+                }
+                else
+                {
+                    PhotoStatusText = "Picture failed";
+                }
             }
         }
         #endregion

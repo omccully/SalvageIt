@@ -14,6 +14,7 @@
             
             <!--<Image x:Name="PhotoImage" />-->
             <Button Text="Take Photo" Command="{Binding CameraButtonCommand}" />
+            <Button Text="Select Photo" Command="{Binding SelectPhotoCommand}" />
             <Label Text="{Binding PhotoStatusText}" />
 
             <Button Text="Select Location" Command="{Binding SelectLocationCommand}" />
