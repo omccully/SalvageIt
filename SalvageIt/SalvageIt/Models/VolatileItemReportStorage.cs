@@ -21,10 +21,14 @@ namespace SalvageIt.Models
 
         }
 
-        public VolatileItemReportStorage(IValidator<ItemReport> item_report_validator)
+        public VolatileItemReportStorage(IValidator<ItemReport> item_report_validator,
+            IEnumerable<ItemReport> initial_data)
             : base(item_report_validator)
         {
-
+            foreach(ItemReport ir in initial_data)
+            {
+                EditableLocalItemReports.Add(ir);
+            }
         }
 
         public override async Task Refresh(LocationCoordinates location, double radius_miles)

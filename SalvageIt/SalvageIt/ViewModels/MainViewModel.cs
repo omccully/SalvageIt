@@ -59,7 +59,7 @@ namespace SalvageIt.ViewModels
                             Title = "Test item",
                             Description = "found on side of road on my way to work this morning",
                             ItemLocation = new LocationCoordinates(1.0, 1.0),
-                            ReportTime = DateTime.Now,
+                            ReportTime = DateTime.Now - TimeSpan.FromDays(10),
                             ItemPhoto = new StreamImageSource()
                         });
                 });

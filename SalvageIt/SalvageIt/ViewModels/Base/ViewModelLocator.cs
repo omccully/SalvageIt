@@ -41,22 +41,39 @@ namespace SalvageIt.ViewModels
             _container.RegisterType<INavigationService, NavigationService>();
             _container.RegisterType<IMapsNavigation, MapsNavigation>();
             _container.RegisterInstance<IToaster>(DependencyService.Get<IToaster>());
-            _container.RegisterType<ItemReportStorage, VolatileItemReportStorage>(
-                new ContainerControlledLifetimeManager());
 
+            try
+            {
 #if DEBUG
-            var uis = new UriImageSource();
-            uis.Uri = new Uri("http://png.icons8.com/metro/1600/settings.png");
-            var irs1 = _container.Resolve<ItemReportStorage>();
+                var uis = new UriImageSource();
+                uis.Uri = new Uri("http://png.icons8.com/metro/1600/settings.png");
+                //var irs1 = _container.Resolve<ItemReportStorage>();
 
-            irs1.SubmitItem(new ItemReport()
+                var test_ir_collection = new List<ItemReport>() { new ItemReport()
             {
                 Title = "vml item",
                 ItemPhoto = uis,
                 ItemLocation = new LocationCoordinates(42.2440242, -83.6222102),
                 ReportTime = new DateTime(2018, 9, 8)
-            });
+            }};
+
+                _container.RegisterInstance(typeof(ItemReportStorage),
+                    new VolatileItemReportStorage(
+                        _container.Resolve<IValidator<ItemReport>>(),
+                        test_ir_collection),
+                        new ContainerControlledLifetimeManager());
+                _container.Resolve<ItemReportStorage>();
+                _container.Resolve<ItemReportStorage>();
+#else
+            _container.RegisterType<ItemReportStorage, VolatileItemReportStorage>(
+                new ContainerControlledLifetimeManager());
 #endif
+            }
+            catch(Exception e)
+            {
+                System.Diagnostics.Debug.WriteLine(e.ToString());
+            }
+
         }
 
         public static INavigationService NavigationService
