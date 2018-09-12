@@ -40,7 +40,8 @@ namespace SalvageIt.ViewModels
             _container.RegisterType<IPictureSelector, PictureSelector>();
             _container.RegisterType<IValidator<ItemReport>, SubmitItemReportValidator>();
             _container.RegisterType<IViewModelViewTranslator, ViewModelViewTranslator>();
-            _container.RegisterType<INavigationService, NavigationService>();
+            _container.RegisterType<INavigationService, NavigationService>(
+                new ContainerControlledLifetimeManager());
             _container.RegisterType<IMapsNavigation, MapsNavigation>();
             _container.RegisterInstance<IToaster>(DependencyService.Get<IToaster>());
 

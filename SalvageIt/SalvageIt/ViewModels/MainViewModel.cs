@@ -19,18 +19,49 @@ namespace SalvageIt.ViewModels
         ItemReportStorage ItemReportStorage;
         IGeolocator Geolocator;
 
+        ObservableCollectionFilter<ItemReport> Filter;
+
         public MainViewModel(ItemReportStorage item_report_storage, 
             IGeolocator geolocator)
         {
             this.ItemReportStorage = item_report_storage;
-            this.LocalItemReports = item_report_storage.LocalItemReports;
             this.Geolocator = geolocator;
             this.Title = "Salvage It";
+
+            Filter = new ObservableCollectionFilter<ItemReport>(
+                            item_report_storage.LocalItemReports);
+            this.LocalItemReports = Filter.FilteredResults;
 
             RefreshActionAsync();
         }
 
-        public ReadOnlyObservableCollection<ItemReport> LocalItemReports { get; set; } 
+        public ReadOnlyObservableCollection<ItemReport> LocalItemReports { get; set; }
+
+        bool _ShowOnlyMyReports = false;
+        public bool ShowOnlyMyReports
+        {
+            get
+            {
+                return _ShowOnlyMyReports;
+            }
+            set
+            {
+                SetProperty(ref _ShowOnlyMyReports, value,
+                    "ShowOnlyMyReports", delegate
+                    {
+                        // changed
+                        if(value)
+                        {
+                            Filter.Filter = (ir) => ir.IsMine;
+                        }
+                        else
+                        {
+                            Filter.Filter = (ir) => true;
+                        }
+                    });
+                
+            }
+        }
 
         ICommand _ReportItemCommand;
         public ICommand ReportItemCommand

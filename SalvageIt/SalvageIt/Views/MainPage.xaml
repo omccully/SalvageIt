@@ -6,52 +6,54 @@
              x:Class="SalvageIt.Views.MainPage"
              viewModel:ViewModelLocator.AutoWireViewModel="true">
   <ContentPage.Resources>
-    <ResourceDictionary>
-        <converters:StringConverter x:Key="ToStringConverter" />
-        <converters:DateTimeToTimeAgoConverter x:Key="ToTimeAgoConverter" />
-        <converters:LocationToDistanceConverter x:Key="ToDistanceConverter" />
-    </ResourceDictionary>
+      <ResourceDictionary>
+          <converters:StringConverter x:Key="ToStringConverter" />
+          <converters:DateTimeToTimeAgoConverter x:Key="ToTimeAgoConverter" />
+          <converters:LocationToDistanceConverter x:Key="ToDistanceConverter" />
+      </ResourceDictionary>
   </ContentPage.Resources>
 
   <StackLayout>
-      <ListView x:Name="ReportItemsListView" 
-                RowHeight="120"
-                IsPullToRefreshEnabled="True"
-                RefreshCommand="{Binding RefreshCommand}"
-                IsRefreshing="{Binding IsRefreshing}"
-                ItemsSource="{Binding LocalItemReports}"
-                SelectionMode="Single"
-                ItemTapped="ReportItemsListView_ItemTapped">
-        <ListView.ItemTemplate>
-          <DataTemplate>
-            <ViewCell>
-              <StackLayout BackgroundColor="#eee"
-                    Orientation="Horizontal">
-                <Image Source="{Binding ItemPhoto}" />
-                <StackLayout Orientation="Vertical"
-                             HorizontalOptions="FillAndExpand">
-                                <Label Text="{Binding Title}"
-                         FontAttributes="Bold" />
-                  <Label Text="{Binding Description}"
-                         LineBreakMode="TailTruncation" />
-                  <Label Text="{Binding ItemLocation,
-                         Converter={StaticResource ToDistanceConverter}}"
-                         HorizontalTextAlignment="End" />
-                  <Label Text="{Binding ReportTime,
-                         Converter={StaticResource ToTimeAgoConverter}}"
-                         HorizontalTextAlignment="End"  />
-                </StackLayout>
+    <ListView x:Name="ReportItemsListView" 
+          RowHeight="120"
+          IsPullToRefreshEnabled="True"
+          RefreshCommand="{Binding RefreshCommand}"
+          IsRefreshing="{Binding IsRefreshing}"
+          ItemsSource="{Binding LocalItemReports}"
+          SelectionMode="Single"
+          ItemTapped="ReportItemsListView_ItemTapped">
+      <ListView.ItemTemplate>
+        <DataTemplate>
+          <ViewCell>
+            <StackLayout BackgroundColor="#eee"
+              Orientation="Horizontal">
+              <Image Source="{Binding ItemPhoto}" />
+              <StackLayout Orientation="Vertical"
+                          HorizontalOptions="FillAndExpand">
+                <Label Text="{Binding Title}"
+                      FontAttributes="Bold" />
+                <Label Text="{Binding Description}"
+                      LineBreakMode="TailTruncation" />
+                <Label Text="{Binding ItemLocation,
+                      Converter={StaticResource ToDistanceConverter}}"
+                      HorizontalTextAlignment="End" />
+                <Label Text="{Binding ReportTime,
+                      Converter={StaticResource ToTimeAgoConverter}}"
+                      HorizontalTextAlignment="End"  />
               </StackLayout>
-            </ViewCell>
-          </DataTemplate>
-        </ListView.ItemTemplate>
-      </ListView>
-         
-      <Button Text="Add report test"
-              Command="{Binding AddReportTest}" />
-      <Button Text="Report a roadside item" 
-              Command="{Binding ReportItemCommand}"
-              HeightRequest="65" />
+            </StackLayout>
+          </ViewCell>
+        </DataTemplate>
+      </ListView.ItemTemplate>
+    </ListView>
+    <StackLayout Orientation="Horizontal">
+      <Label Text="Show only my items" />
+      <Switch IsToggled="{Binding ShowOnlyMyReports, Mode=TwoWay}" />
     </StackLayout>
-
+    <Button Text="Add report test"
+          Command="{Binding AddReportTest}" />
+    <Button Text="Report a roadside item" 
+          Command="{Binding ReportItemCommand}"
+          HeightRequest="65" />
+  </StackLayout>
 </ContentPage>

@@ -14,11 +14,19 @@ namespace SalvageIt.Models
 
     public abstract class ItemReportStorage
     {
+        ReadOnlyObservableCollection<ItemReport> _LocalItemReports;
         /// <summary>
         /// LocalItemReports updates when Refresh() or SubmitItem() is called
         /// </summary>
-        public ReadOnlyObservableCollection<ItemReport> LocalItemReports => 
-            new ReadOnlyObservableCollection<ItemReport>(EditableLocalItemReports);
+        public ReadOnlyObservableCollection<ItemReport> LocalItemReports
+        {
+            get
+            {
+               return _LocalItemReports ??
+                    (_LocalItemReports = 
+                        new ReadOnlyObservableCollection<ItemReport>(EditableLocalItemReports));
+            }
+        } 
 
         protected ObservableCollection<ItemReport> EditableLocalItemReports { get; private set; } = 
             new ObservableCollection<ItemReport>();
@@ -38,6 +46,7 @@ namespace SalvageIt.Models
         protected ItemReportStorage(IValidator<ItemReport> item_report_validator)
         {
             this.ItemReportValidator = item_report_validator;
+
         }
 
         /// <summary>
