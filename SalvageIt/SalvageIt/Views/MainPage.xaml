@@ -50,7 +50,8 @@
       <Button Text="Add report test"
               Command="{Binding AddReportTest}" />
       <Button Text="Report a roadside item" 
-              Command="{Binding ReportItemCommand}" />
+              Command="{Binding ReportItemCommand}"
+              HeightRequest="65" />
     </StackLayout>
 
 </ContentPage>

@@ -6,21 +6,38 @@
              viewModel:ViewModelLocator.AutoWireViewModel="true">
     <ContentPage.Content>
         <StackLayout>
-            <Label Text="Title" />
+            <Label Text="Title" FontAttributes="Bold" />
             <Entry Text="{Binding TitleInputText, Mode=TwoWay}" />
 
-            <Label Text="Description" />
+            <Label Text="Description" FontAttributes="Bold" />
             <Entry Text="{Binding DescriptionInputText, Mode=TwoWay}" />
             
+            
+            <Label Text="Photo of item" FontAttributes="Bold" />
             <!--<Image x:Name="PhotoImage" />-->
-            <Button Text="Take Photo" Command="{Binding CameraButtonCommand}" />
-            <Button Text="Select Photo" Command="{Binding SelectPhotoCommand}" />
             <Label Text="{Binding PhotoStatusText}" />
-
-            <Button Text="Select Location" Command="{Binding SelectLocationCommand}" />
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Take Photo" 
+                        Command="{Binding CameraButtonCommand}" 
+                        HorizontalOptions="FillAndExpand" />
+                <Button Text="Select Photo" 
+                        Command="{Binding SelectPhotoCommand}"
+                        HorizontalOptions="FillAndExpand" />
+            </StackLayout>
+            
+            <Label Text="Location of item" FontAttributes="Bold" />
             <Label Text="{Binding SelectedLocationText}" />
+            <StackLayout Orientation="Horizontal">
+                <Button Text="Select Location" 
+                        Command="{Binding SelectLocationCommand}"
+                        HorizontalOptions="FillAndExpand" />
+                <Button Text="Use my location" 
+                        Command="{Binding UseCurrentLocationCommand}"
+                        HorizontalOptions="FillAndExpand"/>
+            </StackLayout>
 
-            <Button Text="Submit" Command="{Binding SubmitButtonCommand}" />
+            <Button Text="Submit" Command="{Binding SubmitButtonCommand}"
+                    HeightRequest="65" />
         </StackLayout>
     </ContentPage.Content>
 </ContentPage>

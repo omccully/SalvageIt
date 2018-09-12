@@ -35,7 +35,8 @@ namespace SalvageIt.UnitTest.Models
                     )
                 );
 
-            VolatileItemReportStorage virs = new VolatileItemReportStorage(validator_mock.Object);
+            VolatileItemReportStorage virs = 
+                new VolatileItemReportStorage(validator_mock.Object);
 
             await Assert.ThrowsExceptionAsync<DataInvalidException>(
                 () => virs.SubmitItem(new ItemReport()));

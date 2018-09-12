@@ -71,7 +71,7 @@ namespace SalvageIt.UnitTest.ViewModels
             string description_input = "Looks alright";
 
             ReportItemViewModel vm = new ReportItemViewModel(
-                pic_taker, null, item_report_storage);
+                pic_taker, null, null, null, item_report_storage);
             vm.NavigationService = nav;
 
             vm.TitleInputText = title_input;
@@ -124,7 +124,7 @@ namespace SalvageIt.UnitTest.ViewModels
         public void ExceptionThrownWhenSubmitting()
         {
             ReportItemViewModel vm = new ReportItemViewModel(
-                pic_taker, toaster, null);
+                pic_taker, null, toaster, null, null);
 
             vm.DescriptionInputText = "Looks alright";
 

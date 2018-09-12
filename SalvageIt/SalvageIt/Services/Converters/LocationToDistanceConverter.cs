@@ -9,20 +9,21 @@ namespace SalvageIt.Services.Converters
     using Services;
     using Models;
 
-    class LocationToDistanceConverter : IValueConverter
+    public class LocationToDistanceConverter : IValueConverter
     {
+        public static IGeolocator Geolocator { get; set; } = null;
+
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             LocationCoordinates coords = (LocationCoordinates)value;
+            if (coords == null) return "unknown location";
 
-            IGeolocator geoloc = DependencyService.Get<IGeolocator>();
-
-            if(geoloc.LastKnownLocation == null)
+            if(Geolocator.LastKnownLocation == null)
             {
                 return coords.ToString();
             }
 
-            double distance = geoloc.LastKnownLocation
+            double distance = Geolocator.LastKnownLocation
                 .DistanceTo(coords, DistanceUnits.Miles);
 
             // TODO: this should be randomized a bit

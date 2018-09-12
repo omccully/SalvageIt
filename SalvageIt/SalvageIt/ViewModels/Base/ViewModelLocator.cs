@@ -18,6 +18,7 @@ namespace SalvageIt.ViewModels
     using Translator;
     using Navigation;
     using Unity.Lifetime;
+    using SalvageIt.Services.Converters;
 
     public static class ViewModelLocator
     {
@@ -32,8 +33,9 @@ namespace SalvageIt.ViewModels
         { 
             // register
             _container = new UnityContainer();
-
-            _container.RegisterType<IGeolocator, Geolocator>(new InjectionConstructor());
+            _container.RegisterType<IGeolocator, Geolocator>(
+                new ContainerControlledLifetimeManager(), 
+                new InjectionConstructor());
             _container.RegisterType<IPictureTaker, PictureTaker>();
             _container.RegisterType<IPictureSelector, PictureSelector>();
             _container.RegisterType<IValidator<ItemReport>, SubmitItemReportValidator>();
@@ -41,6 +43,9 @@ namespace SalvageIt.ViewModels
             _container.RegisterType<INavigationService, NavigationService>();
             _container.RegisterType<IMapsNavigation, MapsNavigation>();
             _container.RegisterInstance<IToaster>(DependencyService.Get<IToaster>());
+
+            LocationToDistanceConverter.Geolocator = 
+                _container.Resolve<IGeolocator>();
 
             try
             {

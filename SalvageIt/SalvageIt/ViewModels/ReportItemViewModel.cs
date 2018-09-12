@@ -19,15 +19,18 @@ namespace SalvageIt.ViewModels
         IPictureSelector PictureSelector;
         IToaster Toaster;
         ItemReportStorage ItemReportStorage;
+        IGeolocator Geolocator;
 
-        public ReportItemViewModel(IPictureTaker picture_taker, 
-            IPictureSelector picture_selector, IToaster toaster, 
+        public ReportItemViewModel(IPictureTaker picture_taker,
+            IPictureSelector picture_selector, IToaster toaster,
+            IGeolocator geolocator,
             ItemReportStorage item_report_storage)
         {
             this.PictureTaker = picture_taker;
             this.PictureSelector = picture_selector;
             this.Toaster = toaster;
             this.ItemReportStorage = item_report_storage;
+            this.Geolocator = geolocator;
 
             this.Title = "Create new item report";
         }
@@ -61,11 +64,23 @@ namespace SalvageIt.ViewModels
 
         async void SelectLocationAction()
         {
-            //SelectLocationPage select_loc_page = new SelectLocationPage();
-            //select_loc_page.LocationChosen += Select_loc_page_LocationChosen;
-            //await Navigation.PushAsync(select_loc_page);
-
             await NavigationService.NavigateToAsync<SelectLocationViewModel>();
+        }
+
+        ICommand _UseCurrentLocationCommand;
+        public ICommand UseCurrentLocationCommand
+        {
+            get
+            {
+                return _UseCurrentLocationCommand ??
+                      (_UseCurrentLocationCommand = new Command(UseCurrentLocationAction));
+            }
+        }
+
+        async void UseCurrentLocationAction()
+        {
+            SelectedLocationText = "Determining location...";
+            SelectedLocation = await Geolocator.GetPositionAsync();
         }
 
         public override Task ReturnToAsync(object return_data)
@@ -74,7 +89,8 @@ namespace SalvageIt.ViewModels
             return Task.CompletedTask;
         }
 
-        string _SelectedLocationText;
+        const string NoLocationSelectedYet = "No location selected yet";
+        string _SelectedLocationText = NoLocationSelectedYet;
         public string SelectedLocationText
         {
             get
@@ -99,7 +115,15 @@ namespace SalvageIt.ViewModels
             {
                 SetProperty(ref _SelectedLocation, value,
                     "SelectedLocation");
-                SelectedLocationText = value.ToString();
+                if(value == null)
+                {
+                    SelectedLocationText = NoLocationSelectedYet;
+                }
+                else
+                {
+                    SelectedLocationText = value.ToString();
+                }
+                
             }
         }
         #endregion
@@ -118,6 +142,7 @@ namespace SalvageIt.ViewModels
         async void CameraButtonAction()
         {
             PhotoSelection = await PictureTaker.TakePicture();
+            UseCurrentLocationAction();
         }
 
         ICommand _SelectPhotoCommand;
@@ -135,7 +160,7 @@ namespace SalvageIt.ViewModels
             PhotoSelection = await PictureSelector.SelectPicture();
         }
 
-        string _PhotoStatusText = "No picture taken yet";
+        string _PhotoStatusText = "No photo selected yet";
         public string PhotoStatusText {
             get
             {

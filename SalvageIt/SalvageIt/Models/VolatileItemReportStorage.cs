@@ -22,12 +22,15 @@ namespace SalvageIt.Models
         }
 
         public VolatileItemReportStorage(IValidator<ItemReport> item_report_validator,
-            IEnumerable<ItemReport> initial_data)
+            IEnumerable<ItemReport> initial_data = null)
             : base(item_report_validator)
         {
-            foreach(ItemReport ir in initial_data)
+            if(initial_data != null)
             {
-                EditableLocalItemReports.Add(ir);
+                foreach (ItemReport ir in initial_data)
+                {
+                    EditableLocalItemReports.Add(ir);
+                }
             }
         }
 

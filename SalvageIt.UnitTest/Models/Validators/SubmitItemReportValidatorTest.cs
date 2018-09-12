@@ -69,14 +69,5 @@ namespace SalvageIt.UnitTest.Models.Validators
 
             Assert.IsFalse(Validator.IsValid(test_item_report));
         }
-
-        [TestMethod]
-        public void IsValid_ReportTimeMinValue()
-        {
-            test_item_report.ReportTime = DateTime.MinValue;
-
-            Assert.IsFalse(Validator.IsValid(test_item_report));
-        }
-
     }
 }
